@@ -117,8 +117,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with ColorPy.  If not, see <http://www.gnu.org/licenses/>.
 '''
 import math, numpy
-
-import colormodels
+from scipy import interpolate # added by annie
+from scipy import integrate # added by annie
+import matplotlib.pyplot as plt # added by annie
+import colorpy.colormodels as colormodels
 
 # Assumed physical brightness of the monitor [W/m^2]
 #   80 cd/m^2 * 20.3 mW/cd (assuming light at 556 nm)
@@ -719,12 +721,13 @@ def xyz_from_spectrum (spectrum):
     (num_wl, num_col) = shape
     assert num_col == 2, 'Expecting 2D array with each row: wavelength [nm], specific intensity [W/unit solid angle]'
     # integrate
+    d_wl_nm = spectrum[1][0]- spectrum[0][0]
     rtn = colormodels.xyz_color (0.0, 0.0, 0.0)
     for i in range (0, num_wl):
         wl_nm_i = spectrum [i][0]
         specific_intensity_i = spectrum [i][1]
         xyz = xyz_from_wavelength (wl_nm_i)
-        rtn += specific_intensity_i * xyz
+        rtn += specific_intensity_i * xyz * d_wl_nm # must multiply by a delta for integral
     return rtn
 
 def get_normalized_spectral_line_colors (

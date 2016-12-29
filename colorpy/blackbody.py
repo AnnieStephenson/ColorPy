@@ -71,9 +71,9 @@ import math
 import numpy
 import pylab
 
-import colormodels
-import ciexyz
-import plots
+import colorpy.colormodels as colormodels
+import colorpy.ciexyz as ciexyz
+import colorpy.plots as plots
 
 # Physical constants in mks units
 PLANCK_CONSTANT   = 6.6237e-34      # J-sec
