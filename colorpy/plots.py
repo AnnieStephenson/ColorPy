@@ -126,8 +126,8 @@ from __future__ import print_function
 import math
 import numpy, pylab
 
-import colormodels
-import ciexyz
+import colorpy.colormodels as colormodels
+import colorpy.ciexyz as ciexyz
 
 # Miscellaneous utilities for plots
 
@@ -162,9 +162,9 @@ def tighten_x_axis (x_list):
 
 def rgb_patch_plot (
     rgb_colors,
-    color_names,
-    title,
-    filename,
+    color_names = None,
+    title = None,
+    filename = None,
     patch_gap = 0.05,
     num_across = 6):
     '''Draw a set of color patches, specified as linear rgb colors.'''
@@ -197,9 +197,11 @@ def rgb_patch_plot (
             name = None
         draw_patch (float (ix), float (-iy), colorstring, name, patch_gap)
     pylab.axis ('off')
-    pylab.title (title)
-    print ('Saving plot %s' % str (filename))
-    pylab.savefig (filename)
+    if title != None:
+        pylab.title(title)
+    if filename != None:
+        print ('Saving plot %s' % str (filename))
+        pylab.savefig (filename)
 
 def xyz_patch_plot (
     xyz_colors,
@@ -294,8 +296,8 @@ def spectrum_plot (
     pylab.xlabel (xlabel)
     pylab.ylabel (ylabel)
     # done
-    print ('Saving plot %s' % str (filename))
-    pylab.savefig (filename)
+#    print ('Saving plot %s' % str (filename))
+#    pylab.savefig (filename)
 
 #
 # Color vs param plot
