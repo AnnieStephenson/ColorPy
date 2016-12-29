@@ -1,14 +1,14 @@
-# -*- coding: utf-8 -*-
 """
 Created on Wed Dec 28 15:45:34 2016
 
-@author: Annie Stephenson
+functions for calculating the color values in various color spaces from a reflectance spectrum
+
+.. moduleauthor:: Annie Stephenson <stephenson@g.harvard.edu>
 """
 
-from __future__ import division, print_function
 import numpy as np
 import matplotlib.pyplot as plt
-import colorpy, colorpy.ciexyz, colorpy.illuminants, colorpy.colormodels
+import colorpy.ciexyz, colorpy.illuminants, colorpy.colormodels
 
 def color_from_refl(refl, wavelengths = np.arange(360, 831), illuminant_name = 'D65', show_spectrum_plot = False):
     """
@@ -36,13 +36,13 @@ def color_from_refl(refl, wavelengths = np.arange(360, 831), illuminant_name = '
     Notes
     -----    
     Entries in colorpy.illuminants are defined only for wavelengths 360-830 nm.
-    Therefore, if reflectance is given outside this range, the smaller of the
-    two vectors will be padded with zeros to ensure they end up the same length.
-    Reflectance values must range from 0 to 1.
+    Therefore, if reflectance is given outside this range, the code will return
+    an error
 
     The illuminant (light source) is "D65" (standard daylight) by default,
     which approximates natural daylight. You can use any other function in 
-    colorpy.illuminants instead if you like, or make your own array with the same format.
+    colorpy.illuminants instead if you like, or make your own array with the 
+    same format.
 
     """
     if illuminant_name == 'D65':
@@ -71,12 +71,13 @@ def color_from_refl(refl, wavelengths = np.arange(360, 831), illuminant_name = '
     refl_power = illuminant[:,1]*refl
     spectrum = np.transpose(np.vstack((wavelengths, refl_power)))
 
+    # plots the power spectrum of reflected light vs wavelength
     if show_spectrum_plot:
         plt.figure()
         colorpy.plots.spectrum_plot(spectrum,
                                     title='Reflected light',
                                     filename='temp.png',
-                                    ylabel='Power')		# plots the power spectrum of reflected light vs wavelength
+                                    ylabel='Power')	
     
     xyz = colorpy.ciexyz.xyz_from_spectrum(spectrum)
     lab = colorpy.colormodels.lab_from_xyz(xyz) 
