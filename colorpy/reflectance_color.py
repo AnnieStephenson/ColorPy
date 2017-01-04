@@ -9,6 +9,7 @@ functions for calculating the color values in various color spaces from a reflec
 import numpy as np
 import matplotlib.pyplot as plt
 import colorpy.ciexyz, colorpy.illuminants, colorpy.colormodels
+from scipy import interpolate
 
 def color_from_refl(refl, wavelengths = np.arange(360, 831), illuminant_name = 'D65', show_spectrum_plot = False):
     """
@@ -54,21 +55,12 @@ def color_from_refl(refl, wavelengths = np.arange(360, 831), illuminant_name = '
     assert all(0 <= x <= 1 for x in refl), 'expecting reflectance less than or equal to 1'
     assert min(wavelengths) >= 360, 'expecting reflectance for wavelength values > 360 nm'
     assert max(wavelengths) <=830, 'expecting reflectance for wavelength values < 830 nm'
+    
+    f_illuminant = interpolate.interp1d(illuminant[:,0], illuminant[:,1])
+    illum = f_illuminant(wavelengths)
 
-    wavelengths = np.intersect1d(illuminant[:,0], wavelengths)
-    illum = illuminant[:,0].tolist()
-    wl_index = []
-    for i in range(0,len(wavelengths)):
-        wl_index.append(illum.index(wavelengths[i]))
-    illuminant_crop = []
-    for i in wl_index:
-        illuminant_crop.append(illuminant[i,:])
-    illuminant = np.array(illuminant_crop)
-
-    # illuminant is an 2D array where the first column is wavelength and the 
-    # second is power. We multiply that power by reflectance to find the power 
-    # of the reflected light
-    refl_power = illuminant[:,1]*refl
+    # multiply illuminant power by reflectance to find the power of the reflected light
+    refl_power = illum*refl
     spectrum = np.transpose(np.vstack((wavelengths, refl_power)))
 
     # plots the power spectrum of reflected light vs wavelength
