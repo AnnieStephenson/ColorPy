@@ -72,10 +72,11 @@ def color_from_refl(refl, wavelengths = np.arange(360, 831), illuminant_name = '
                                     ylabel='Power')	
     
     xyz = colorpy.ciexyz.xyz_from_spectrum(spectrum)
-    lab = colorpy.colormodels.lab_from_xyz(xyz) 
+    lab = colorpy.colormodels.lab_from_xyz(xyz)
+    luv = colorpy.colormodels.luv_from_xyz(xyz)
     rgb = colorpy.colormodels.rgb_from_xyz(xyz)
     irgb = colorpy.colormodels.irgb_from_rgb(rgb)
-    color = {'rgb': rgb, 'irgb': irgb, 'xyz': xyz, 'lab': lab}
+    color = {'rgb': rgb, 'irgb': irgb, 'xyz': xyz, 'lab': lab, 'luv': luv}
     return color
     
 
